@@ -7,15 +7,17 @@ import java.sql.SQLException;
 public class Buku {
 	private long idBuku;
 	private String judul;
+	private String tipeBuku;
 	private int saldo;
 	private double harga;
 	private String flagAktif;
 	
 	public Buku() {}
 	
-	public Buku(long idBuku, String judul, int saldo, double harga, String flagAktif) {
+	public Buku(long idBuku, String judul, String tipeBuku, int saldo, double harga, String flagAktif) {
 		this.idBuku = idBuku;
 		this.judul = judul;
+		this.tipeBuku = tipeBuku;
 		this.saldo = saldo;
 		this.harga = harga;
 		this.flagAktif = flagAktif;
@@ -35,6 +37,14 @@ public class Buku {
 
 	public void setJudul(String judul) {
 		this.judul = judul;
+	}
+
+	public String getTipeBuku() {
+		return tipeBuku;
+	}
+
+	public void setTipeBuku(String tipeBuku) {
+		this.tipeBuku = tipeBuku;
 	}
 
 	public String getFlagAktif() {
@@ -61,7 +71,7 @@ public class Buku {
 		this.harga = harga;
 	}
 	
-	public void insert() throws SQLException {
+	public void insert() throws SQLException{
 		DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
 		Connection connection = databaseConnection.getConnection();
 		
@@ -69,17 +79,17 @@ public class Buku {
 
 		String sql = "INSERT INTO buku(" + 
 				"id, judul, "            +
-				"saldo, harga, "         +
-				"flag_aktif)"            + 
+				"tipe_buku, saldo, "         +
+				" harga, flag_aktif)"            + 
 				" VALUES ('"             + 
 				this.idBuku + "','" + this.judul + "','" +
-				this.saldo  + "','" + this.harga  + "','" + 
-				this.flagAktif + "')";
+				this.tipeBuku  + "','" + this.saldo  + "','" + 
+				this.harga  + "','" + this.flagAktif + "')";
 		
 		try {
 			pStatement = connection.prepareStatement(sql);
 			pStatement.execute();
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
@@ -93,6 +103,7 @@ public class Buku {
 		String sql = "UPDATE buku SET " +
 				"id = '"          + this.idBuku    + "'," +
 				" judul = '"      + this.judul     + "'," +
+				" tipe_buku = '"  + this.tipeBuku     + "'," +
 				" saldo = '"      + this.saldo     + "'," +
 				" harga = '"      + this.harga     + "'," +
 				" flag_aktif = '" + this.flagAktif + "'";
