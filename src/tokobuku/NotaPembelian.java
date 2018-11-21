@@ -93,20 +93,44 @@ public class NotaPembelian {
 		buku.setHarga(harga);
 	}
 	
-	public void insertHeader() {
+	public void insertHeader() throws SQLException {
 		DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
 		Connection connection = databaseConnection.getConnection();
 		
 		PreparedStatement pStatement;
 
 		String sql = "INSERT INTO header_nota(" + 
-				"id, judul, "            +
-				"tipe_buku, saldo, "         +
-				" harga, flag_aktif)"            + 
+				"nama, alamat, "            +
+				"tanggal)"            + 
 				" VALUES ('"             + 
-				this.idBuku + "','" + this.judul + "','" +
-				this.tipeBuku  + "','" + this.saldo  + "','" + 
-				this.harga  + "','" + this.flagAktif + "')";
+				getNamaPembeli() + "','" + getAlamatPembeli() + "','" +
+				getTanggalNota() + "')";
+		
+		try {
+			pStatement = connection.prepareStatement(sql);
+			pStatement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void insertDetail() throws SQLException {
+		DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
+		Connection connection = databaseConnection.getConnection();
+		
+		PreparedStatement pStatement;
+		
+		//TODO ambil judul sama harga satuan dari tabel buku
+		//TODO harga total = jumlah buku * harga satuan
+		
+		String sql = "INSERT INTO detail_nota(" + 
+				"id_nota, judul, "            +
+				"jumlah_buku, harga_satuan, "            +
+				"harga_total)"            + 
+				" VALUES ('"             + 
+				getIdNota() + "','" + getJudulBuku() + "','" +
+				getJumlahBuku() + "','" + getHargaBuku() + "','" +
+				getHargaTotalperBuku() + "')";
 		
 		try {
 			pStatement = connection.prepareStatement(sql);

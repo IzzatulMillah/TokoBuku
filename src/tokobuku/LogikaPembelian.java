@@ -13,6 +13,7 @@ public class LogikaPembelian {
 	
 	public void insertHeader() throws SQLException {
 		
-		presentationLayer.insertHeaderNota();
+		notaPembelian = presentationLayer.insertHeaderNota();
+		notaPembelian.insertHeader();
 	}
 }

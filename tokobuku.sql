@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 21, 2018 at 04:29 PM
+-- Generation Time: Nov 21, 2018 at 04:50 PM
 -- Server version: 5.7.23-0ubuntu0.16.04.1-log
 -- PHP Version: 7.0.32-0ubuntu0.16.04.1
 
@@ -72,6 +72,13 @@ CREATE TABLE `header_nota` (
   `tanggal` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `header_nota`
+--
+
+INSERT INTO `header_nota` (`id`, `nama`, `alamat`, `tanggal`) VALUES
+(1, 'Xanon', 'Washington DC', '2018-03-24');
+
 -- --------------------------------------------------------
 
 --
@@ -120,6 +127,12 @@ ALTER TABLE `pembeli`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `header_nota`
+--
+ALTER TABLE `header_nota`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `pembeli`
