@@ -11,9 +11,9 @@ public class Buku {
 	private int saldo;
 	private double harga;
 	private String flagAktif;
-	
+
 	public Buku() {}
-	
+
 	public Buku(long idBuku, String judul, String tipeBuku, int saldo, double harga, String flagAktif) {
 		this.idBuku = idBuku;
 		this.judul = judul;
@@ -22,11 +22,11 @@ public class Buku {
 		this.harga = harga;
 		this.flagAktif = flagAktif;
 	}
-	
+
 	public long getIdBuku() {
 		return idBuku;
 	}
-	
+
 	public void setIdBuku(long idBuku) {
 		this.idBuku = idBuku;
 	}
@@ -70,11 +70,11 @@ public class Buku {
 	public void setHarga(double harga) {
 		this.harga = harga;
 	}
-	
+
 	public void insert() throws SQLException{
 		DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
 		Connection connection = databaseConnection.getConnection();
-		
+
 		PreparedStatement pStatement;
 
 		String sql = "INSERT INTO buku(" + 
@@ -85,19 +85,15 @@ public class Buku {
 				this.idBuku + "','" + this.judul + "','" +
 				this.tipeBuku  + "','" + this.saldo  + "','" + 
 				this.harga  + "','" + this.flagAktif + "')";
-		
-		try {
-			pStatement = connection.prepareStatement(sql);
-			pStatement.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+
+		pStatement = connection.prepareStatement(sql);
+		pStatement.execute();
 	}
-	
+
 	public void update() throws SQLException {
 		DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
 		Connection connection = databaseConnection.getConnection();
-		
+
 		PreparedStatement pStatement;
 
 		String sql = "UPDATE buku SET " +
@@ -107,19 +103,19 @@ public class Buku {
 				" saldo = '"      + this.saldo     + "'," +
 				" harga = '"      + this.harga     + "'," +
 				" flag_aktif = '" + this.flagAktif + "'";
-		
+
 		pStatement = connection.prepareStatement(sql);
 		pStatement.execute();
 	}
-	
+
 	public void delete() throws SQLException {
 		DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
 		Connection connection = databaseConnection.getConnection();
-		
+
 		PreparedStatement pStatement;
 
 		String sql = "DELETE FROM buku WHERE id = '" + this.idBuku + "'";
-		
+
 		pStatement = connection.prepareStatement(sql);
 		pStatement.execute();
 	}

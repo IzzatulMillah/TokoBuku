@@ -1,6 +1,6 @@
 package tokobuku;
 
-public enum Kota {
+public enum Kota{
 	SURABAYA, JAKARTA, BANDUNG,
 	SIDOARJO, PASURUAN, GRESIK,
 	BONDOWOSO, PURWOKERTO, KEDIRI,
@@ -8,4 +8,4 @@ public enum Kota {
 	SEMARANG, BALI, BANYUWANGI,
 	BALIKPAPAN, SAMARINDA, JAYAPURA,
 	BATAM, LAMPUNG, PADANG
-}
+};
