@@ -19,16 +19,16 @@ public class PresentationLayer {
 		int saldo = scan.nextInt();
 		System.out.print("Harga : ");
 		double harga = scan.nextDouble();
-		System.out.print("Flag Aktif : ");
-		String flagAktif = scan.next();
 		
-		return new Buku(id, judul, tipeBuku, saldo, harga, flagAktif);
+		return new Buku(id, judul, tipeBuku, saldo, harga, null);
 	}
 	
 	public NotaPembelian insertHeaderNota() {
 		NotaPembelian notaPembelian = new NotaPembelian();
 		
 		System.out.println("### INPUT HEADER NOTA ###");
+		System.out.print("Nama Kasir     : ");
+		notaPembelian.setNamaKasir(scan.nextLine());
 		System.out.print("Nama Pembeli   : ");
 		notaPembelian.setNamaPembeli(scan.nextLine());
 		System.out.print("Alamat Pembeli : ");
@@ -37,6 +37,8 @@ public class PresentationLayer {
 		notaPembelian.setKotaPembeli(scan.nextLine());
 		System.out.print("Tanggal Beli   : ");
 		notaPembelian.setTanggalNota(scan.nextLine());
+		System.out.print("Diskon Member  : ");
+		notaPembelian.setDiskonPerMember(scan.nextDouble());
 		
 		return notaPembelian;
 	}
@@ -73,7 +75,9 @@ public class PresentationLayer {
 		}
 	}
 	
-	public void showAllNotaPembelian() {
-		
+	public void showAllNota() {
+		System.out.println("\n******** TAMPILAN NOTA ********");
+		System.out.println("Masukkan tanggal nota (YYYY/MM/DD) : ");
+		String tanggal = scan.next();
 	}
 }

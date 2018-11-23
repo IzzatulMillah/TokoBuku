@@ -2,48 +2,56 @@ package tokobuku;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.EnumSet;
 
-public class LogikaPembelian {
+import payment.CashInjector;
+import payment.CreditInjector;
+import payment.PaymentApplication;
+
+public class BusinessLogicPembelian {
 	PresentationLayer presentationLayer = new PresentationLayer();
 	Pembeli pembeli;
 	NotaPembelian notaPembelian;
 
-	public LogikaPembelian() {
+	public BusinessLogicPembelian() {
 
 	}
 
 	public void insertHeader() throws SQLException, CustomException {
 		notaPembelian = presentationLayer.insertHeaderNota();
 		String kota = notaPembelian.getKotaPembeli();
+		
 		validasiKotaHarusAda(kota);
 		notaPembelian.insertHeader();
+		insertDetail();
+		
+		Main.counter++;
 	}
 
 	public void insertDetail() throws SQLException, CustomException {
 		notaPembelian = presentationLayer.insertDetailNota();
+		
 		validasiKodeNotaHarusAda();
 		validasiBukuHarusAda(notaPembelian.getKodeBuku());
 		notaPembelian.insertDetail();
 	}
+	
+	public void insertPembayaran(String msg, double nilai) {
+        
+		CashInjector cashInjector = new CashInjector();
+        PaymentApplication app = cashInjector.getPayment();
+        app.paymentProcess(msg, nilai);
 
-	public void validasiKotaHarusAda(String kota) throws CustomException, IllegalArgumentException {
-		Kota[] daftarKota = {Kota.BALI, Kota.BALIKPAPAN, Kota.BANDUNG, 
-				Kota.BANYUWANGI, Kota.BATAM, Kota.BEKASI, 
-				Kota.BONDOWOSO, Kota.DEPOK, Kota.GRESIK, 
-				Kota.JAKARTA, Kota.JAYAPURA, Kota.KEDIRI,
-				Kota.LAMPUNG, Kota.PADANG, Kota.PASURUAN, 
-				Kota.PURWOKERTO, Kota.SAMARINDA, Kota.SEMARANG, 
-				Kota.SIDOARJO, Kota.SURABAYA, Kota.YOGYAKARTA};
-		EnumSet<Kota> listKotaAda;
-		String namaKota = kota;
+        CreditInjector creditInjector = new CreditInjector();
+        PaymentApplication apps = creditInjector.getPayment();
+        apps.paymentProcess(msg, nilai);
+	}
 
-		listKotaAda = EnumSet.of(Kota.SURABAYA, daftarKota); 
-
-		if (!listKotaAda.contains(Kota.valueOf(namaKota))) {
-			throw new CustomException("Nama kota belum ada di master");
+	public void validasiKotaHarusAda(String inputanKota) throws CustomException, IllegalArgumentException {
+		for(Kota kota : Kota.values()) {
+			if(!kota.name().equalsIgnoreCase(inputanKota)) {
+				throw new CustomException("Nama kota belum ada di master");
+			}
 		}
-
 	}
 
 	public void validasiKodeNotaHarusAda() throws SQLException, CustomException {
@@ -66,8 +74,4 @@ public class LogikaPembelian {
 			throw new CustomException("Kode Buku tidak ada di database");
 		}
 	}
-
-	public void validasiSaldoTidakKosong() {}
-
-	public void validasiBukuHarusAktif() {}
 }

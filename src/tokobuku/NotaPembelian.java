@@ -4,15 +4,26 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class NotaPembelian {
 	private int idNota;
-	private int jumlahBuku;
-	private double hargaTotalperBuku;
 	private String tanggalNota;
+	private String namaKasir;
+	private double totalHargaSemuaBuku;
+	private double diskonPerMember;
+	private double totalHargaAkhir;
+	private String jenisPembayaran;
+	private double jumlahPembayaran;
+	private double kembalian;
+	
+	private int jumlahBuku;
+	private double diskonPerBuku;
+	private double hargaTotalperBuku;
 
 	private Pembeli pembeli;
 	private Buku buku;
+	private List<Buku> listBuku;
 
 	BukuDao bukuDao = new BukuDao();
 
@@ -28,6 +39,70 @@ public class NotaPembelian {
 	public void setIdNota(int idNota) {
 		this.idNota = idNota;
 	}
+	
+	public String getTanggalNota() {
+		return tanggalNota;
+	}
+
+	public void setTanggalNota(String tanggalNota) {
+		this.tanggalNota = tanggalNota;
+	}
+
+	public String getNamaKasir() {
+		return namaKasir;
+	}
+
+	public void setNamaKasir(String namaKasir) {
+		this.namaKasir = namaKasir;
+	}
+
+	public double getTotalHargaSemuaBuku() {
+		return totalHargaSemuaBuku;
+	}
+
+	public void setTotalHargaSemuaBuku(double totalHargaSemuaBuku) {
+		this.totalHargaSemuaBuku = totalHargaSemuaBuku;
+	}
+
+	public double getDiskonPerMember() {
+		return diskonPerMember;
+	}
+
+	public void setDiskonPerMember(double diskonPerMember) {
+		this.diskonPerMember = diskonPerMember;
+	}
+
+	public double getTotalHargaAkhir() {
+		return totalHargaAkhir;
+	}
+
+	public void setTotalHargaAkhir(double totalHargaAkhir) {
+		this.totalHargaAkhir = totalHargaAkhir;
+	}
+	
+	public String getJenisPembayaran() {
+		return jenisPembayaran;
+	}
+
+	public void setJenisPembayaran(String jenisPembayaran) {
+		this.jenisPembayaran = jenisPembayaran;
+	}
+
+	public double getJumlahPembayaran() {
+		return jumlahPembayaran;
+	}
+
+	public void setJumlahPembayaran(double jumlahPembayaran) {
+		this.jumlahPembayaran = jumlahPembayaran;
+	}
+
+	public double getKembalian() {
+		return kembalian;
+	}
+
+	public void setKembalian(double kembalian) {
+		this.kembalian = kembalian;
+	}
 
 	public int getJumlahBuku() {
 		return jumlahBuku;
@@ -36,6 +111,14 @@ public class NotaPembelian {
 	public void setJumlahBuku(int jumlahBuku) {
 		this.jumlahBuku = jumlahBuku;
 	}
+	
+	public double getDiskonPerBuku() {
+		return diskonPerBuku;
+	}
+
+	public void setDiskonPerBuku(double diskonPerBuku) {
+		this.diskonPerBuku = diskonPerBuku;
+	}
 
 	public double getHargaTotalperBuku() {
 		return hargaTotalperBuku;
@@ -43,14 +126,6 @@ public class NotaPembelian {
 
 	public void setHargaTotalperBuku(double hargaTotalperBuku) {
 		this.hargaTotalperBuku = hargaTotalperBuku;
-	}
-
-	public String getTanggalNota() {
-		return tanggalNota;
-	}
-
-	public void setTanggalNota(String tanggalNota) {
-		this.tanggalNota = tanggalNota;
 	}
 
 	public String getNamaPembeli() {
@@ -108,11 +183,19 @@ public class NotaPembelian {
 		PreparedStatement pStatement;
 
 		String sql = "INSERT INTO header_nota(" + 
-				"nama, alamat, "            +
-				"kota, tanggal)"            + 
+				"nama, alamat, "                +
+				"kota, tanggal, "               +
+				"kasir, total_harga, "          +
+				"diskon, total_akhir, "         +
+				"jenis_bayar, jumlah_bayar, "   +
+				"kembalian)"             + 
 				" VALUES ('"             + 
 				getNamaPembeli() + "','" + getAlamatPembeli() + "','" +
-				getKotaPembeli() + "','" + getTanggalNota() + "')";
+				getKotaPembeli() + "','" + getTanggalNota() + "','" +
+				getNamaKasir()   + "','" + getTotalHargaSemuaBuku() + "','" +
+				getDiskonPerMember() + "','" + getTotalHargaAkhir() + "','" +
+				getJenisPembayaran() + "','" + getJumlahPembayaran() + "','" +
+				getKembalian() + "')";
 
 		pStatement = connection.prepareStatement(sql);
 		pStatement.execute();
@@ -124,25 +207,23 @@ public class NotaPembelian {
 
 		PreparedStatement pStatement;
 		ResultSet resultSet;
-		String judul = null;
-		double harga = 0;
 
 		resultSet = bukuDao.getDataBuku(getKodeBuku());
 		while(resultSet.next()) {
-			judul = resultSet.getString("judul");
-			harga = resultSet.getDouble("harga");
+			setJudulBuku(resultSet.getString("judul"));
+			setHargaBuku(resultSet.getDouble("harga"));
 		}
 
-		double total = harga * this.jumlahBuku;
+		this.hargaTotalperBuku = getHargaBuku() * this.jumlahBuku;
 
 		String sql = "INSERT INTO detail_nota(" + 
 				"id_nota, judul, "              +
 				"jumlah_buku, harga_satuan, "   +
-				"harga_total)"                  + 
+				"diskon, harga_total)"                  + 
 				" VALUES ('"                    + 
-				getIdNota()     + "','" + judul + "','" +
-				getJumlahBuku() + "','" + harga + "','" +
-				total + "')";
+				getIdNota()     + "','" + getJudulBuku() + "','" +
+				getJumlahBuku() + "','" + getHargaBuku() + "','" +
+				getDiskonPerBuku() + "','" + this.hargaTotalperBuku + "')";
 		try {
 			pStatement = connection.prepareStatement(sql);
 			pStatement.execute();
@@ -161,7 +242,15 @@ public class NotaPembelian {
 				"id = '"       + getIdNota()        + "'," +
 				" nama = '"    + getNamaPembeli()   + "'," +
 				" alamat = '"  + getAlamatPembeli() + "'," +
-				" tanggal = '" + getTanggalNota()   + "'";
+				" kota = '"    + getKotaPembeli()   + "'," +
+				" tanggal = '"  + getTanggalNota() + "'," +
+				" kasir = '"    + getNamaKasir()   + "'," +
+				" total_harga = '"  + getTotalHargaSemuaBuku() + "'," +
+				" diskon = '"    + getDiskonPerMember()   + "'," +
+				" total_akhir = '"  + getTotalHargaAkhir() + "'," +
+				" jenis_bayar = '"    + getJenisPembayaran()   + "'," +
+				" jumlah_bayar = '"  + getJumlahPembayaran() + "'," +
+				" kembalian = '" + getKembalian()   + "'";
 
 		pStatement = connection.prepareStatement(sql);
 		pStatement.execute();
@@ -189,6 +278,7 @@ public class NotaPembelian {
 				" judul = '"        + judul           + "'," +
 				" jumlah_buku = '"  + getJumlahBuku() + "'," +
 				" harga_satuan = '" + harga           + "'," +
+				" diskon = '"       + getDiskonPerBuku() + "'," +
 				" harga_total = '"  + total           + "'";
 
 		pStatement = connection.prepareStatement(sql);

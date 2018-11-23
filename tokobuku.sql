@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 22, 2018 at 05:06 PM
+-- Generation Time: Nov 23, 2018 at 04:41 PM
 -- Server version: 5.7.23-0ubuntu0.16.04.1-log
 -- PHP Version: 7.0.32-0ubuntu0.16.04.1
 
@@ -53,21 +53,14 @@ INSERT INTO `buku` (`id`, `judul`, `tipe_buku`, `saldo`, `harga`, `flag_aktif`) 
 --
 
 CREATE TABLE `detail_nota` (
+  `id` int(10) NOT NULL,
   `id_nota` int(10) NOT NULL,
   `judul` varchar(200) NOT NULL,
   `jumlah_buku` int(10) NOT NULL,
   `harga_satuan` double NOT NULL,
+  `diskon` double NOT NULL,
   `harga_total` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `detail_nota`
---
-
-INSERT INTO `detail_nota` (`id_nota`, `judul`, `jumlah_buku`, `harga_satuan`, `harga_total`) VALUES
-(1, 'The Harry Potter and The Goblet of Fire', 4, 4500000, 18000000),
-(2, 'The Harry Potter and The Goblet of Fire', 2, 4500000, 9000000),
-(5, 'The Harry Potter and The Goblet of Fire', 2, 4500000, 9000000);
 
 -- --------------------------------------------------------
 
@@ -80,22 +73,15 @@ CREATE TABLE `header_nota` (
   `nama` varchar(100) NOT NULL,
   `alamat` varchar(200) NOT NULL,
   `kota` varchar(50) NOT NULL,
-  `tanggal` date NOT NULL
+  `tanggal` date NOT NULL,
+  `kasir` varchar(100) NOT NULL,
+  `total_harga` double NOT NULL,
+  `diskon` double NOT NULL,
+  `total_akhir` double NOT NULL,
+  `jenis_bayar` varchar(10) NOT NULL,
+  `jumlah_bayar` double NOT NULL,
+  `kembalian` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `header_nota`
---
-
-INSERT INTO `header_nota` (`id`, `nama`, `alamat`, `kota`, `tanggal`) VALUES
-(1, 'Xanon', 'Washington DC', '', '2018-03-24'),
-(2, 'Molly', 'Embong Malang', '', '2018-11-23'),
-(3, 'Reyhan', 'Bulak Banteng', '', '2018-02-23'),
-(8, 'Risa', 'Kemerdekaan', 'Jakarta', '2018-12-12'),
-(9, 'Jack', 'Sesame street', 'New York', '2018-11-21'),
-(10, 'Jihan', 'Keputran', 'Surabaya', '2018-12-03'),
-(11, 'Erin', 'Kupang', 'Kupang', '2018-11-21'),
-(12, 'Dori', 'Jepang Gang 5 No. 12', 'Padang', '2018-12-01');
 
 -- --------------------------------------------------------
 
@@ -134,7 +120,7 @@ ALTER TABLE `buku`
 -- Indexes for table `detail_nota`
 --
 ALTER TABLE `detail_nota`
-  ADD PRIMARY KEY (`id_nota`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `header_nota`
@@ -151,6 +137,12 @@ ALTER TABLE `pembeli`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `detail_nota`
+--
+ALTER TABLE `detail_nota`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `header_nota`

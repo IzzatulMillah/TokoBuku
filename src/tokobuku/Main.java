@@ -6,27 +6,25 @@ import java.util.Scanner;
 
 public class Main {
 
-	//	static {
-	//		try {
-	//			showMenu();
-	//		} catch (InputMismatchException | CustomException e) {
-	//			// TODO Auto-generated catch block
-	//			e.printStackTrace();
-	//		}
-	//	}
+	public static int counter;
+	
+	static {
+		counter = 0;
+		if(counter > 10) {
+			System.out.println("Promo telah habis. Coba lagi season selanjutnya");
+		}
+	}
 
 	public static void main(String[] args) throws SQLException, CustomException, InputMismatchException {
-				LogikaPembelian l = new LogikaPembelian();
-				try {
-					l.insertHeader();
-					l.insertDetail();
-				} catch (CustomException e) {
-					// TODO Auto-generated catch block
-					System.out.println(e.getMessage());
-				} catch (IllegalArgumentException e) {
-					System.out.println(e.getMessage());
-				}
-		
+		BusinessLogicPembelian blPembelian = new BusinessLogicPembelian();
+		try {
+			blPembelian.insertHeader();
+		} catch (CustomException e) {
+			System.out.println(e.getMessage());
+		} catch (IllegalArgumentException e) {
+			System.out.println(e.getMessage());
+		}
+
 	}
 
 	public static void showMenu() throws CustomException, InputMismatchException {
@@ -80,6 +78,11 @@ public class Main {
 	}
 
 	public static void insertPembelian() {
-
+		BusinessLogicPembelian blPembelian = new BusinessLogicPembelian();
+		try {
+			blPembelian.insertHeader();
+		} catch (SQLException | CustomException e) {
+			System.out.println(e);
+		}
 	}
 }

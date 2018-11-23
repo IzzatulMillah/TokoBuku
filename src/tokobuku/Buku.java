@@ -11,6 +11,10 @@ public class Buku {
 	private int saldo;
 	private double harga;
 	private String flagAktif;
+	
+	interface Diskon{
+		double hitung();
+	}
 
 	public Buku() {}
 

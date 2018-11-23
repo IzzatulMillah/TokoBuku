@@ -7,7 +7,7 @@ public class PaymentApplication {
        this.payment = service;
     }
 
-    public void paymentProcess(String msg, String rec){
+    public void paymentProcess(String msg, double rec){
        //do some msg validation, manipulation logic etc
        this.payment.pay(msg, rec);
     }

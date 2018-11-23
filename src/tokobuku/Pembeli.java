@@ -75,10 +75,10 @@ public class Pembeli {
 		PreparedStatement pStatement;
 
 		String sql = "UPDATE pembeli SET " +
-				"id = '"          + this.idPembeli    + "'," +
-				" nama = '"      + this.nama     + "'," +
-				" alamat = '"      + this.alamat     + "'," +
-				" kota = '" + this.kota + "'";
+				"id = '"      + this.idPembeli + "'," +
+				" nama = '"   + this.nama      + "'," +
+				" alamat = '" + this.alamat    + "'," +
+				" kota = '"   + this.kota      + "'";
 		
 		pStatement = connection.prepareStatement(sql);
 		pStatement.execute();
