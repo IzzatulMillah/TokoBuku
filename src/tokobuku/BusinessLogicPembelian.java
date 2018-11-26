@@ -2,10 +2,12 @@ package tokobuku;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import payment.CashInjector;
 import payment.CreditInjector;
 import payment.PaymentApplication;
+import tokobuku.Buku.DiskonTambahan;
 
 public class BusinessLogicPembelian {
 	PresentationLayer presentationLayer = new PresentationLayer();
@@ -18,9 +20,8 @@ public class BusinessLogicPembelian {
 
 	public void insertHeader() throws SQLException, CustomException {
 		notaPembelian = presentationLayer.insertHeaderNota();
-		String kota = notaPembelian.getKotaPembeli();
 		
-		validasiKotaHarusAda(kota);
+		validasiKotaHarusAda(notaPembelian.getKotaPembeli());
 		notaPembelian.insertHeader();
 		insertDetail();
 		
@@ -32,18 +33,45 @@ public class BusinessLogicPembelian {
 		
 		validasiKodeNotaHarusAda();
 		validasiBukuHarusAda(notaPembelian.getKodeBuku());
+		diskonTambahan.getProsenDiskonTambahan(notaPembelian.getJudulBuku(), notaPembelian.getJumlahBuku());
 		notaPembelian.insertDetail();
+		insertPembayaran(notaPembelian.getJenisPembayaran(), notaPembelian.getJumlahPembayaran());
 	}
 	
 	public void insertPembayaran(String msg, double nilai) {
-        
-		CashInjector cashInjector = new CashInjector();
-        PaymentApplication app = cashInjector.getPayment();
-        app.paymentProcess(msg, nilai);
+		if(msg.equalsIgnoreCase("CASH")) {
+			CashInjector cashInjector = new CashInjector();
+	        PaymentApplication app = cashInjector.getPayment();
+	        app.paymentProcess(msg, nilai);
+		} else if(msg.equalsIgnoreCase("CREDIT")) {
+			CreditInjector creditInjector = new CreditInjector();
+	        PaymentApplication apps = creditInjector.getPayment();
+	        apps.paymentProcess(msg, nilai);
+		}
+	}
+	
+	DiskonTambahan diskonTambahan = new DiskonTambahan() {
+		public double getProsenDiskonTambahan(String jenisBuku, int jumlah) {
+			if(jenisBuku.equalsIgnoreCase("edukasi")) {
+				if(jumlah > 10) {
+					return 10;
+				}
+			}
+			return 0;
+		}
 
-        CreditInjector creditInjector = new CreditInjector();
-        PaymentApplication apps = creditInjector.getPayment();
-        apps.paymentProcess(msg, nilai);
+		@Override
+		public double getProsenDiskonTambahan() {
+			return 0;
+		}
+	};
+	
+	public <E> void hitungProporsionalDiskonHeader(double diskonHeader, List<E> detail) {
+		double totalDetail = 0.0;
+		// TODO edit dependency di sini
+		for(E buku : detail) {
+			double nilaiDetilSetelahDiskonDetil;
+		}
 	}
 
 	public void validasiKotaHarusAda(String inputanKota) throws CustomException, IllegalArgumentException {

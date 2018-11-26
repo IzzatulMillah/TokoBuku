@@ -9,22 +9,29 @@ public class Main {
 	public static int counter;
 	
 	static {
-		counter = 0;
-		if(counter > 10) {
+		counter = 1;
+		if(counter <= 10) {
+			System.out.println("Pembeli ke-" + counter + "\n");
+		} else {
 			System.out.println("Promo telah habis. Coba lagi season selanjutnya");
 		}
 	}
 
 	public static void main(String[] args) throws SQLException, CustomException, InputMismatchException {
-		BusinessLogicPembelian blPembelian = new BusinessLogicPembelian();
-		try {
-			blPembelian.insertHeader();
-		} catch (CustomException e) {
-			System.out.println(e.getMessage());
-		} catch (IllegalArgumentException e) {
-			System.out.println(e.getMessage());
-		}
-
+		Scanner scan = new Scanner(System.in);
+		String input;
+		
+		do {
+			try {
+				showMenu();
+			} catch (CustomException e) {
+				System.out.println(e.getMessage());
+			} catch (IllegalArgumentException e) {
+				System.out.println(e.getMessage());
+			}
+			System.out.println("Ingin membeli lagi? (y/t)");
+			input = scan.next();
+		} while(input.equalsIgnoreCase("y"));
 	}
 
 	public static void showMenu() throws CustomException, InputMismatchException {

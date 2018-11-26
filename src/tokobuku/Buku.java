@@ -13,7 +13,17 @@ public class Buku {
 	private String flagAktif;
 	
 	interface Diskon{
-		double hitung();
+		double hitung(int jumlah, double hargaBuku, double prosenDiskonPerBuku);
+	}
+	
+	interface DiskonTambahan{
+		double getProsenDiskonTambahan();
+
+		double getProsenDiskonTambahan(String jenisBuku, int jumlah);
+	}
+	
+	double hitungDiskon(int jumlah, double hargaBuku, double prosenDiskonPerBuku, Diskon diskon) {
+		return diskon.hitung(jumlah, hargaBuku, prosenDiskonPerBuku);
 	}
 
 	public Buku() {}

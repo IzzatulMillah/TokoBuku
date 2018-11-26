@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import tokobuku.Buku.Diskon;
+
 public class NotaPembelian {
 	private int idNota;
 	private String tanggalNota;
@@ -200,6 +202,9 @@ public class NotaPembelian {
 		pStatement = connection.prepareStatement(sql);
 		pStatement.execute();
 	}
+	
+	Diskon diskon = (int jumlahBuku, double hargaBuku, double prosenDiskonPerBuku) 
+			-> ((jumlahBuku * hargaBuku * prosenDiskonPerBuku) / 0.01);
 
 	public void insertDetail() throws SQLException {
 		DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
@@ -213,13 +218,15 @@ public class NotaPembelian {
 			setJudulBuku(resultSet.getString("judul"));
 			setHargaBuku(resultSet.getDouble("harga"));
 		}
+		
+		this.diskonPerBuku = buku.hitungDiskon(getJumlahBuku(), getHargaBuku(), getDiskonPerBuku(), diskon);
 
 		this.hargaTotalperBuku = getHargaBuku() * this.jumlahBuku;
 
 		String sql = "INSERT INTO detail_nota(" + 
 				"id_nota, judul, "              +
 				"jumlah_buku, harga_satuan, "   +
-				"diskon, harga_total)"                  + 
+				"diskon, harga_total)"          + 
 				" VALUES ('"                    + 
 				getIdNota()     + "','" + getJudulBuku() + "','" +
 				getJumlahBuku() + "','" + getHargaBuku() + "','" +
@@ -262,24 +269,24 @@ public class NotaPembelian {
 
 		PreparedStatement pStatement;
 		ResultSet resultSet;
-		String judul = null;
-		double harga = 0;
 
 		resultSet = bukuDao.getDataBuku(getKodeBuku());
 		while(resultSet.next()) {
-			judul = resultSet.getString("judul");
-			harga = resultSet.getDouble("harga");
+			setJudulBuku(resultSet.getString("judul"));
+			setHargaBuku(resultSet.getDouble("harga"));
 		}
+		
+		this.diskonPerBuku = buku.hitungDiskon(getJumlahBuku(), getHargaBuku(), getDiskonPerBuku(), diskon);
 
-		double total = harga * this.jumlahBuku;
+		this.hargaTotalperBuku = getHargaBuku() * this.jumlahBuku;
 
 		String sql = "UPDATE detail_nota SET " +
 				"id_nota = '"       + getIdNota()     + "'," +
-				" judul = '"        + judul           + "'," +
+				" judul = '"        + getJudulBuku()  + "'," +
 				" jumlah_buku = '"  + getJumlahBuku() + "'," +
-				" harga_satuan = '" + harga           + "'," +
-				" diskon = '"       + getDiskonPerBuku() + "'," +
-				" harga_total = '"  + total           + "'";
+				" harga_satuan = '" + getHargaBuku()  + "'," +
+				" diskon = '"       + this.diskonPerBuku     + "'," +
+				" harga_total = '"  + this.hargaTotalperBuku + "'";
 
 		pStatement = connection.prepareStatement(sql);
 		pStatement.execute();

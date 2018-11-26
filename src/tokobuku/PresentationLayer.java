@@ -57,6 +57,18 @@ public class PresentationLayer {
 		return notaPembelian;
 	}
 	
+	public NotaPembelian insertPayment() {
+		NotaPembelian notaPembelian = new NotaPembelian();
+		
+		System.out.println("### INPUT JENIS PAYMENT ###");
+		System.out.println("Jenis Payment          : ");
+		notaPembelian.setJenisPembayaran(scan.next());
+		System.out.println("Jumlah yang dibayarkan : ");
+		notaPembelian.setJumlahPembayaran(scan.nextDouble());
+		
+		return notaPembelian;
+	}
+	
 	public void showAllBuku() throws SQLException, CustomException {
 		List<Buku> daftarBuku;
 		BukuDao bukuDao = new BukuDao();
